@@ -30,4 +30,4 @@ Once the agent is running in `/path/to/workspace/`, it reads `AGENTS.md` which i
 
 | Skill | Path | Description |
 |-------|------|-------------|
-| debug-pytorch-xpu-issues | `MySkills/skills/debug-pytorch-xpu-issues/pytorch-xpu-debug.md` | Debugging PyTorch XPU issues and common patterns |
+| debug-pytorch-xpu-issues | `MySkills/skills/debug-pytorch-xpu-issues/SKILL.md` | Debugging PyTorch XPU issues and common patterns |

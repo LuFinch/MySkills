@@ -14,7 +14,7 @@ Before executing any command in this skill, you **MUST** ask the user whether th
 - **PyTorch source**: `/home/sdp/fengqing/workspace/pytorch`
 - **oneAPI SDK**: `/mnt/deep_learning_essentials/2025_3_2_36/setvars.sh`
 - **Conda env**: `lfq-pt` (Python 3.10)
-- **Env setup script**: `/home/sdp/fengqing/env.sh`
+- **Env setup script**: `/home/sdp/fengqing/workspace/env.sh`
 
 Example question to ask the user:
 > "Are you using the default environment (workspace=`/home/sdp/fengqing`, pytorch=`/home/sdp/fengqing/workspace/pytorch`, oneAPI=`/mnt/deep_learning_essentials/2025_3_2_36/setvars.sh`, conda env=`lfq-pt`)? If not, please provide your workspace path, PyTorch source path, oneAPI setvars.sh path, and conda environment name."
@@ -26,12 +26,12 @@ Once the user confirms (or supplies) the values, substitute them in all subseque
 Because most AI coding assistants execute commands in a non-interactive shell that does not source `.bashrc`, you **must** use this pattern for all commands that require the environment:
 
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && <YOUR_COMMAND>'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && <YOUR_COMMAND>'
 ```
 
 ### Why?
 - `eval "$(conda shell.bash hook)"` — initializes conda in a non-interactive bash shell
-- `source /home/sdp/fengqing/env.sh` — sources oneAPI setvars.sh and activates conda env `lfq-pt`
+- `source /home/sdp/fengqing/workspace/env.sh` — sources oneAPI setvars.sh and activates conda env `lfq-pt`
 - `cd /home/sdp/fengqing/workspace/pytorch` — switch to the PyTorch source directory
 
 ## Step 1: Setup Environment (No build)
@@ -39,7 +39,7 @@ bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && 
 If you only need to run Python/pytest commands and don't need to rebuild C++ code:
 
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && python -c "import torch; print(torch.__version__); print(torch.xpu.is_available())"'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && python -c "import torch; print(torch.__version__); print(torch.xpu.is_available())"'
 ```
 
 ## Step 2: Build PyTorch (Full build)
@@ -47,7 +47,7 @@ bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && 
 Full clean build (slow, ~1-2 hours):
 
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && export TORCH_XPU_ARCH_LIST="pvc,bmg" && export BUILD_SEPARATE_OPS=1 && git submodule sync && git submodule update --init --recursive && python setup.py clean && python setup.py bdist_wheel 2>&1'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && export TORCH_XPU_ARCH_LIST="pvc,bmg" && export BUILD_SEPARATE_OPS=1 && git submodule sync && git submodule update --init --recursive && python setup.py clean && python setup.py bdist_wheel 2>&1'
 ```
 
 ## Step 3: Build PyTorch (Incremental / develop mode)
@@ -55,7 +55,7 @@ bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && 
 For iterative development (faster, recompiles only changed files):
 
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && export TORCH_XPU_ARCH_LIST="pvc,bmg" && export BUILD_SEPARATE_OPS=1 && python setup.py develop 2>&1'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && export TORCH_XPU_ARCH_LIST="pvc,bmg" && export BUILD_SEPARATE_OPS=1 && python setup.py develop 2>&1'
 ```
 
 > **Note**: Use `develop` mode for C++ changes during debugging. It's significantly faster than a full rebuild.
@@ -64,22 +64,22 @@ bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && 
 
 ### Run a specific test case
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && pytest -v third_party/torch-xpu-ops/test/xpu/<TEST_FILE>.py -k "<TEST_NAME>" 2>&1'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && pytest -v third_party/torch-xpu-ops/test/xpu/<TEST_FILE>.py -k "<TEST_NAME>" 2>&1'
 ```
 
 ### Example
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && pytest -v third_party/torch-xpu-ops/test/xpu/test_transformers_xpu.py -k "test_transformerencoder_fastpath_use_torchscript_False_enable_nested_tensor_True_use_autocast_True_d_model_12_xpu" 2>&1'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && pytest -v third_party/torch-xpu-ops/test/xpu/test_transformers_xpu.py -k "test_transformerencoder_fastpath_use_torchscript_False_enable_nested_tensor_True_use_autocast_True_d_model_12_xpu" 2>&1'
 ```
 
 ### Run all tests in a file
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && pytest -v third_party/torch-xpu-ops/test/xpu/<TEST_FILE>.py 2>&1'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && pytest -v third_party/torch-xpu-ops/test/xpu/<TEST_FILE>.py 2>&1'
 ```
 
 ### Run tests with verbose oneDNN output (useful for debugging oneDNN kernels)
 ```bash
-bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/env.sh && cd /home/sdp/fengqing/workspace/pytorch && ONEDNN_VERBOSE=1 pytest -v third_party/torch-xpu-ops/test/xpu/<TEST_FILE>.py -k "<TEST_NAME>" 2>&1'
+bash -c 'eval "$(conda shell.bash hook)" && source /home/sdp/fengqing/workspace/env.sh && cd /home/sdp/fengqing/workspace/pytorch && ONEDNN_VERBOSE=1 pytest -v third_party/torch-xpu-ops/test/xpu/<TEST_FILE>.py -k "<TEST_NAME>" 2>&1'
 ```
 
 ## Step 5: Quick Python-only Fix (no rebuild needed)

@@ -57,6 +57,8 @@ Before starting any task, scan the `MySkills/skills/` directory and load all rel
 | debug-pytorch-xpu-issues | `MySkills/skills/debug-pytorch-xpu-issues/pytorch-xpu-debug.md` | Debugging PyTorch XPU issues and common patterns |
 | hardware-projection | `MySkills/skills/hardware-projection/SKILL.md` | Roofline model performance projection for operators/models on target hardware |
 | hardware-property-query | `MySkills/skills/hardware-property-query/` | Query hardware device properties (GPU specs, memory, compute units) |
+| hardward-knowledge | `MySkills/skills/hardward-knowledge/gpu-memory.md` | GPU memory hierarchy knowledge, focusing on Intel GPU |
+| hardward-profiler-counter | `MySkills/skills/hardward-profiler-counter/SKILL.md` | GPU hardware performance counters via Unitrace (Intel) and Nsight Compute (NVIDIA) |
 | pytorch-xpu-knowledge-base | `MySkills/skills/pytorch-xpu-knowledge-base.md` | PyTorch XPU knowledge base and reference |
 
 ### Rules
